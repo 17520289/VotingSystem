@@ -28,18 +28,19 @@ class VotingController extends Controller
 
     //nếu cookie không tồn tại thì lấy câu chuyện đầu
     if($voted_data==null){
-      $key = array_rand($array_Id); //trả về key
+      $key = 1; //trả về key
      
     }else{
-      
-      //Lấy ngẫu nhiên 
-      $key = array_rand($array_Id); //trả về key
-      while ($this->checkIsVoted($voted_data, $array_Id[$key])) {
-        $id = array_rand($array_Id);
+      $key=end($voted_data);
+      for($i=0;$i<sizeof($array_Id); $i++){
+        if($array_Id[$i]==$key){
+          $key=$array_Id[$i+1];
+          break;
+        }
       }
-     
     }
-    $joke = Joke::find($array_Id[$key]);
+  
+    $joke = Joke::find($key);
     return view('votingPage', compact('joke','voted_data'));
   }
 
@@ -65,16 +66,17 @@ class VotingController extends Controller
     //push $id vào trong cookie
     array_push($voted_data, $id);
     $t = json_encode($voted_data);
-    $minutes = 60;
+    $minutes = 36000;
     Cookie::queue(Cookie::make('voted', $t, $minutes));
+
+
     $joke = Joke::find($id);
-
-
     if ($request['action'] == 'fun') {
       $joke->isFun += 1;
       $joke->save();
       return redirect()->route('voting.get');
-    } else {
+    }
+    if ($request['action'] == 'notFun')  {
       $joke->notFun += 1;
       $joke->save();
       return redirect()->route('voting.get');

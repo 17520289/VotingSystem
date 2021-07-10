@@ -55,6 +55,7 @@
                 <div class="notification is-white" style="padding-bottom: 100px;">
                     @if(isset($joke))
                     <p align="left" class="has-text-grey-dark is-size-5">{{$joke->content}}</p>
+                   
                 </div>
                 <form action="{{route('votingjoke.post',[$joke->id])}}" method="post">
                     {{csrf_field()}}
