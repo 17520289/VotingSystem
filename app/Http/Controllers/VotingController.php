@@ -44,16 +44,6 @@ class VotingController extends Controller
     return view('votingPage', compact('joke','voted_data'));
   }
 
-  public function checkIsVoted(array $voted_data, $id)
-  {
-   
-    foreach ($voted_data as $i) {
-      if ($i == $id) {
-        return true;
-      }
-    }
-    return false;
-  }
   public function postVoting(Request $request, $id)
   {
     if (Cookie::get('voted')) {
